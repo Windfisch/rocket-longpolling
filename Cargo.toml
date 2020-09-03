@@ -1,0 +1,13 @@
+[package]
+name = "rocket05"
+version = "0.1.0"
+authors = ["Florian Jung <flo@windfis.ch>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rocket = {git="https://github.com/SergioBenitez/Rocket"}
+async-std="1.6.3"
+async-notify="0.2.0"
+uuid = {version = "0.8", features = ["v4"]}
