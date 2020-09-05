@@ -12,7 +12,7 @@ var app = new Vue({
 		poke: function() {
 			var that = this;
 			var user = document.getElementById('other_user').value;
-			axios.get("http://localhost:8001/notify?uuid=" + user).then(
+			axios.get("http://localhost:8000/notify?uuid=" + user).then(
 				function(response) {
 					if (response.status == 200) {
 						that.message = "Successfully requested to poke " + user + ". Answer was " + response.data;
@@ -26,14 +26,14 @@ var app = new Vue({
 	}
 })
 
-var promise = axios.get("http://localhost:8001/login?name=hello");
+var promise = axios.get("http://localhost:8000/login?name=hello");
 promise.then(function (response) {
     console.log(response.data);
     app.user_id = response.data;
   });
 
 function loop() {
-	axios.get("http://localhost:8001/poll?uuid="+app.user_id+"&seconds=10").then(
+	axios.get("http://localhost:8000/poll?uuid="+app.user_id+"&seconds=10").then(
 		function(response) {
 			if (response.data == "Done") {
 				app.count+=1;
