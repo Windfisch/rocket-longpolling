@@ -1107,8 +1107,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "rocket05"
-version = "0.1.0"
+name = "rocket-longpolling"
+version = "1.0.0"
 dependencies = [
  "async-notify",
  "async-std",

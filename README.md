@@ -34,7 +34,7 @@ Build the webpage: `cd web; yarn build`
 
 Run the server: `cargo run`. It will serve API and webpage on port 8000.
 
-In a browser, visit [http://localhost:8080](http://localhost:8000).
+In a browser, visit [http://localhost:8000](http://localhost:8000).
 
 
 Changing the port
