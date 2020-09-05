@@ -4,6 +4,19 @@
     <title>Getting Started</title>
   </head>
   <body>
-    <script src="main.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
+
+    <h1>Hello World!</h1>
+    <div id="app">
+        <p>Your user id is {{ user_id }}.</p>
+
+        <p>{{ message }}</p>
+
+        <p>You have been poked {{ count }} times</p>
+
+        <p>User to poke: <input id="other_user"/> <button v-on:click="poke">Poke!</button></p>
+    </div>
+    
+	<script src="main.js"></script>
   </body>
 </html>
