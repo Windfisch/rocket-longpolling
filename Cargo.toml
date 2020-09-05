@@ -1,6 +1,6 @@
 [package]
-name = "rocket05"
-version = "0.1.0"
+name = "rocket-longpolling"
+version = "1.0.0"
 authors = ["Florian Jung <flo@windfis.ch>"]
 edition = "2018"
 
