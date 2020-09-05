@@ -1,23 +1,26 @@
 #![feature(proc_macro_hygiene)]
-#[macro_use] extern crate rocket;
 
-use rocket::State;
-use std::sync::Mutex;
-use std::time::{Duration,Instant};
-use uuid::Uuid;
-use async_notify::Notify;
-use std::sync::Arc;
-use async_std;
-use rocket::http::Method;
-
-
-use rocket::{Request, Response};
-use rocket::fairing::{Fairing, Info, Kind};
-use rocket::http::{Header, ContentType};
+use std::collections::HashMap;
 use std::io::Cursor;
+use std::path::{Path, PathBuf};
+use std::sync::{Arc, Mutex};
+use std::time::{Duration,Instant};
+
+use uuid::Uuid;
+use async_std;
+use async_notify::Notify;
+
+#[macro_use] extern crate rocket;
+use rocket::{Request, Response, State};
+use rocket::fairing::{Fairing, Info, Kind};
+use rocket::http::{Header, ContentType, Method};
+use rocket::response::NamedFile;
+
+
+
+// CORS setup ------------------------------------------------------------- 
 
 pub struct CORS();
-
 
 #[rocket::async_trait]
 impl Fairing for CORS {
@@ -45,6 +48,8 @@ impl Fairing for CORS {
 
 
 
+// Data structures -------------------------------------------------------- 
+
 struct User {
 	name: String,
 	uuid: String,
@@ -52,11 +57,14 @@ struct User {
 	notification: Arc<Notify>
 }
 
-use std::collections::HashMap;
 
 struct ActiveUsers {
 	users: HashMap<String, User>
 }
+
+
+
+// REST endpoints --------------------------------------------------------- 
 
 #[get("/login?<name>")]
 fn login(users: State<Mutex<ActiveUsers>>, name: String) -> String {
@@ -117,13 +125,23 @@ async fn poll(users: State<'_, Mutex<ActiveUsers>>, uuid: String, seconds: u64) 
 	}
 }
 
+
+
+// File server ------------------------------------------------------------ 
+
 #[get("/")]
-async fn hello() -> &'static str {
-	println!("hello");
-	async_std::task::sleep(Duration::from_secs(3)).await;
-	println!("world");
-    "Hello, world!"
+async fn index() -> Option<NamedFile> {
+    NamedFile::open("web/dist/index.html").await.ok()
 }
+
+#[get("/<file..>")]
+async fn files(file: PathBuf) -> Option<NamedFile> {
+    NamedFile::open(Path::new("web/dist/").join(file)).await.ok()
+}
+
+
+
+// Launching -------------------------------------------------------------- 
 
 #[rocket::launch]
 fn rocket() -> rocket::Rocket {
@@ -131,6 +149,6 @@ fn rocket() -> rocket::Rocket {
 
 	rocket::ignite()
 		.manage(users)
-		.mount("/", routes![hello,login,stuff,poll,notify])
+		.mount("/", routes![index,files,login,stuff,poll,notify])
 		.attach(CORS())
 }
